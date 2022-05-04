@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Users Page</title>
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+  </head>
+  <body>
+    <h1>Hello here are all the users!</h1>
+    <div>
+      {% if user_db %}
+        <ol>
+            {% for user in user_db %}
+              <li> User Info
+                <ul>
+                  <li>First Name: {{ user.first_name }}</li>
+                  <li>Last Name: {{ user.last_name }}</li>
+                  <li>Email Address: {{ user.email }}</li>
+                </ul>
+              </li>
+            {% endfor %}
+        </ol>
+      {% else %}
+        <p>Sorry. User Records not found.</p>
+      {% endif %}
+    </div>
+
+    <h1>Add a new user!</h1>
+    <div>
+      <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Submit  ">
+      </form>
+    </div>
+  </body>
+</html>

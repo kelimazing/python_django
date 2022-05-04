@@ -1,0 +1,255 @@
+=======Virtual Environment=========
+To create environment
+  conda create --name environmentname django
+
+To view Virtual environment list
+  conda env list
+
+To activate environment
+  activate environmentname
+
+
+=======Project Creation=========
+Create a new project (must be on django folder)
+  django-admin startproject name
+
+Run server (Must be on project folder)
+  python manage.py runserver
+
+Create a new django app (Must be on project folder)
+  python manage.py startapp name
+
+
+=======Django Apps Functions and Files=========
+In views.py import HttpResponse from django.http to be able to print
+
+After making an app, add app name in INSTALLED_APPS in settings.py
+         "Hello !!!
+        I finished the course a little while ago, and as I continue to learn I
+        found the answer to your question. The INSTALLED_APPS list is going to
+        be used when you use the "migrate" command, to let django know that it
+        needs to create databases for every applications in this list. In the
+        example in the video, we only used the "python manage.py runserver"
+        command to check if the server was running, so we never actually
+        created any databases, so django never looked in the INSTALLED_APPS
+        list. This is the reason that it did not matter that you did not put
+        appTwo in the settings.py file. You will need to put it in the
+        INSTALLED_APPS if you ever want to create databases for this app.
+        - Vincent"
+
+Create a urls.py in the app folder to be used in urls.py in the project folder
+  It will serve like a sub url.py that can contain other urls within that extension
+
+
+=======Templates=========
+Create a templates folder in the app folder
+  There you may store all your html templates for that app.
+
+render takes in 3 parameters
+  request
+  template Ex: 'index.html' or 'first_app/index.html'
+  context (Ex: context=my_dict) where my_dict is a dictionary of values needed
+   to be input in the template
+
+
+=======STATIC FILES=========
+Create static folder in the app folder
+  Create images folder to store images
+  Create css folder to store css
+
+To load static files
+  {% load static %}
+
+
+=======Models=========
+Models
+    After creating models run
+      python manage.py migrate
+      python manage.py makemigrations appname
+      python manage.py migrate
+
+    To view in admin
+      go to admin.py in app folder
+      Import model by
+      from appfolder.models import tablename
+      admin.site.register(tablename)
+
+
+
+=======BASIC MTV FLOW=========
+HOW TO USE MTV MODELS TEMPLATE VIEWS
+  1) In views.py of an app, import models to use (from .models import tablename)
+  2) In views' functions, query the model for date needed save to a variable. (tablename.objects.order_by('date'))
+  3) Pass results from the model to the template
+              def index(request):
+                  webpages_list = AccessRecord.objects.order_by('date')
+                  date_dict = {"access_records":webpages_list}
+                  return render(request,'first_app/index.html',date_dict)
+  4) Edit the template so you can inject data properly
+  5) Map a URL to the view in urls.py
+
+
+=======FORMS==========
+Create forms.py in app appfolder
+  from django import forms
+  class FormName(forms.Form):
+
+In views.py import forms (from . import forms)
+  In the function call the form by using x = forms.FormName()
+
+When injecting to html
+  {{ form.as_p }} so that each item is printed in a new line
+  {% csrf_token %}
+
+
+=======VALIDATORS==========
+In forms.py
+  from django.core import validators
+
+
+=======MODELFORM==========
+from .models import tablename
+  class FormName(forms.ModelForm)
+    class Meta():
+      model = tablename
+      fields = all by "__all__" or exclude by ["field1","field2"] or just include by ("field1", "field2")
+
+When Updating the model
+if request.method == 'POST':
+      form = forms.FormName(request.POST)
+
+      if form.is_valid():
+          form.save(commit=True)
+
+=======RELATIVE URLS==========
+in urls.py of the app
+  app_name = 'the actual name of the app' #Django searches for this folder to get the proper views
+
+when injecting in html
+  {% url 'the actual name of the app:nameValueGivenInUrls'  %}
+
+
+=======TEMPLATE INHERITANCE==========
+BASE
+{% block body_block %}
+{# Anything outside of this will be inherited if you use extend.#}
+{% endblock %}
+
+TEMPLATE
+<!DOCTYPE html>
+{% extends "htmlfile" %}
+{% block body_block %}
+CONTENT
+{% endblock %}
+
+=======TEMPLATE FILTERS==========
+{{ dict_key|filter}}
+  ex: {{ text|upper }}
+      {{ number|add:99 }} - instead of add(99)
+
+To make custom filters, create a folder under appfolder called templatetags
+  Create __init__.py
+  Create a new file for your filter ex: my_extras.py
+
+                      from django import template
+                      register = template.Library()
+
+                      @register.filter
+                      def filter_function():
+                        define your function here
+
+To use custom filters, load it after the extend tag
+  {% extends "htmlfile" %}
+  {% load my_extras %}
+
+
+=======PASSWORDS==========
+Install
+  pip install bcrypt
+  pip install django[argon2]
+
+then in settings.py
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+]
+
+In using validators in settings.py
+https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
+
+
+=======MEDIA FOLDER==========
+Create media folder in the topmosts folder of the project
+
+Paste in settings.py
+# MEDIA INFORMATION:
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = '/APPNAME/user_login/'
+
+
+=======IMAGING==========
+pip install pillow
+
+In models.py Create a model to extend user table of admin
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# Create your models here.
+class UserProfileInfo(models.Model):
+
+    # Create relationship (don't inherit from User!)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # Add any additional attributes you want
+    portfolio_site = models.URLField(blank=True)
+    profile_pic = models.ImageField(upload_to='APPNAME/profile_pics',blank=True) #This is saved in the media folder
+
+    def __str__(self):
+        # Built-in attribute of django.contrib.auth.models.User !
+        return self.user.username
+
+After creating a model register it in admin.py
+    from django.contrib import admin
+    from .models import UserProfileInfo, User
+
+    # Register your models here.
+    admin.site.register(UserProfileInfo)
+
+
+
+=======USER FORMS==========
+
+In forms.py create a model form for user pass and email
+    from django import forms
+    from django.contrib.auth.models import User
+    from .models import UserProfileInfo
+
+    class UserForm(forms.ModelForm):
+        password = forms.CharField(widget=forms.PasswordInput())
+
+        class Meta():
+            model = User
+            fields = ('username','email','password')
+
+
+    class UserProfileInfoForm(forms.ModelForm):
+        class Meta():
+            model = UserProfileInfo
+            fields = ('portfolio_site','profile_pic')
+
+In the html when using <form> add enctype-"multipart/form-data"
+
+
+=======LOG IN==========
+In views.py import additional functions
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required

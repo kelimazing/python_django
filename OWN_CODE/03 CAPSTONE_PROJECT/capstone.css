@@ -1,0 +1,44 @@
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  background: #141333;
+  color: #FDFFFC;
+  border: 60px solid #029699;
+  border-top: 0px;
+  margin: 0px;
+}
+
+
+h2{
+  margin-bottom: 5%;
+}
+
+p{
+  font-family: 'Lora', serif;
+  padding-top: 5%;
+  padding-right: 15%;
+  padding-left: 15%;
+}
+
+form *{
+  font-family: "Montserrat", sans-serif;
+  padding-top: 0px;
+  margin-bottom: 10px;
+}
+
+input{
+  font-size: 1.5em;
+  font-family: 'Lora', serif;
+}
+
+#submit{
+  font-family: "Montserrat", sans-serif;
+  background: #FF9F1C;
+  border-radius: 25px;
+  height: 80px;
+  width: auto;
+  padding: 10px 10px 10px 10px;
+  font-size: 1.2em;
+  margin-bottom: 4px;
+}

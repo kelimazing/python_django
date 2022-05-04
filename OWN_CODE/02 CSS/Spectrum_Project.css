@@ -1,0 +1,14 @@
+h1{
+  font-family: 'Bebas Neue', cursive;
+  text-align: center;
+}
+
+table{
+  width: 80%;
+  margin: auto;
+}
+
+td{
+  height: 400px;
+  border: 5px solid white;
+}

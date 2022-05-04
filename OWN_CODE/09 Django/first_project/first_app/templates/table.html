@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Table</title>
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+  </head>
+  <body>
+    <h1>Hi here are your Access Records</h1>
+
+    <div class="tabletas">
+      {% if acc_rec %}
+        <table>
+          <thead>
+            <th>Site Name</th>
+            <th>Date Accessed</th>
+          </thead>
+            {% for records in acc_rec %}
+              <tr>
+                <td>{{ records.name }}</td>
+                <td>{{ records.date }}</td>
+              </tr>
+            {% endfor %}
+        </table>
+      {% else %}
+        <p>Sorry. Access Records not found.</p>
+      {% endif %}
+
+    </div>
+  </body>
+</html>
